@@ -24,7 +24,8 @@ namespace iBet
         {
             InitializeComponent();
 
-            // Insert code required on object creation below this point.
+            WebPaser w = new WebPaser(Urls.bong88);
+            w.Show();
         }
     }
 }

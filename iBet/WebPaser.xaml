@@ -1,0 +1,8 @@
+﻿<Window x:Class="iBet.WebPaser"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="WebPaser" Height="341" Width="595">
+    <Grid>
+        <WebBrowser Name="_web" />
+    </Grid>
+</Window>
