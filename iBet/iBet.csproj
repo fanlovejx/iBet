@@ -38,6 +38,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -59,6 +61,12 @@
     </ApplicationDefinition>
     <Compile Include="WebPaser.xaml.cs">
       <DependentUpon>WebPaser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WebPaserWP.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WebPaserWP.Designer.cs">
+      <DependentUpon>WebPaserWP.cs</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -94,6 +102,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WebPaserWP.resx">
+      <DependentUpon>WebPaserWP.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

@@ -1,34 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.Windows.Forms;
 using System.Threading;
 using System.Reflection;
-using System.Net;
 
 namespace iBet
 {
-    public enum Urls
-    {
-        bong88,
-        sbo33 
-    }
-    public partial class WebPaser : Window
+    public partial class WebPaserWP : Form
     {
         Urls _url;
-        public WebPaser(Urls _url)
+        public WebPaserWP(Urls _url)
         {
             InitializeComponent();
             this._url = _url;
-            _web.LoadCompleted += new System.Windows.Navigation.LoadCompletedEventHandler(_web_LoadCompleted);
+            _web.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(DocumentCompleted);
             HideScriptErrors(_web, true);
             if (_url == Urls.bong88)
             {
@@ -36,16 +26,14 @@ namespace iBet
             }
         }
 
-        public void HideScriptErrors(WebBrowser wb, bool Hide)
+
+        public WebPaserWP(String innerHtml)
         {
-            FieldInfo fiComWebBrowser = typeof(WebBrowser).GetField("_axIWebBrowser2", BindingFlags.Instance | BindingFlags.NonPublic);
-            if (fiComWebBrowser == null) return;
-            object objComWebBrowser = fiComWebBrowser.GetValue(wb);
-            if (objComWebBrowser == null) return;
-            objComWebBrowser.GetType().InvokeMember("Silent", BindingFlags.SetProperty, null, objComWebBrowser, new object[] { Hide });
+            InitializeComponent();
+            _web.DocumentText = innerHtml;
         }
 
-        void _web_LoadCompleted(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        void DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             if (_step == Steps.LoadLoginPage)
             {
@@ -58,16 +46,30 @@ namespace iBet
                     _step = Steps.DoLogin;
                 }
             }
-            else if (_step == Steps.DoLogin)
+            if (_step == Steps.DoLogin)
             {
-                
+                if (_web.Url.ToString().Contains(@"bong88.com/main.aspx"))
+                    _step = Steps.LoginSuccess;
+                else
+                    _step = Steps.LoginFail;
             }
+        }
+
+        public void HideScriptErrors(WebBrowser wb, bool Hide)
+        {
+            FieldInfo fiComWebBrowser = typeof(WebBrowser).GetField("_axIWebBrowser2", BindingFlags.Instance | BindingFlags.NonPublic);
+            if (fiComWebBrowser == null) return;
+            object objComWebBrowser = fiComWebBrowser.GetValue(wb);
+            if (objComWebBrowser == null) return;
+            objComWebBrowser.GetType().InvokeMember("Silent", BindingFlags.SetProperty, null, objComWebBrowser, new object[] { Hide });
         }
 
         public enum Steps
         {
             LoadLoginPage,
             DoLogin,
+            LoginSuccess,
+            LoginFail,
             LoadLogoutPage,
             LoadMainPage,
         }
@@ -86,8 +88,7 @@ namespace iBet
 
         void InvokeScript(String Script, WebBrowser _w)
         {
-            _w.InvokeScript("eval", new object[] { Script });
+            _w.Document.InvokeScript("eval", new object[] { Script });
         }
-
     }
 }
